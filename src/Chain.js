@@ -54,7 +54,6 @@ class Chain {
 		ctx.lineCap = 'round';
 		ctx.strokeStyle = colour;
 		ctx.beginPath();
-		//ctx.moveTo(this.centre.x, this.centre.y);
 		this.resolve(t).forEach(({ x, y }) => ctx.lineTo(x, y));
 		ctx.stroke();
 	}
