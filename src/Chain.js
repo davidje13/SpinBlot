@@ -17,6 +17,13 @@ class Chain {
 		this.timeMult = Math.PI * 2 / this.nodes.map(({ speed }) => Math.abs(speed)).reduce(gcd);
 	}
 
+	getLimit() {
+		return this.nodes.reduce(([v, l], node) => {
+			const next = v + node.length * (node.speed === 0 ? -1 : 1);
+			return [next, Math.max(next, l)];
+		}, [0, 0])[1];
+	}
+
 	resolve(t) {
 		const result = [this.centre];
 		let { x, y } = this.centre;

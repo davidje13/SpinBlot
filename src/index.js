@@ -3,13 +3,17 @@ function sleep(millis) {
 }
 
 function randomChain(rad, radius, centre) {
-	return new Chain([
-		{ length: rad / 5, speed: randomInt(-5, 5) },
-		{ length: rad / 5, speed: randomInt(-5, 5) },
-		{ length: rad / 5, speed: randomInt(-5, 5) },
-		{ length: rad / 5, speed: randomInt(-5, 5) },
-		{ length: rad / 5, speed: randomInt(-5, 5) },
-	], { centre, radius, paintCol: randomCol(0.5, 0.9), lineCol: '#FFFFFF' });
+	let chain;
+	do {
+		chain = new Chain([
+			{ length: rad / 5, speed: randomInt(-5, 5) },
+			{ length: rad / 5, speed: randomInt(-5, 5) },
+			{ length: rad / 5, speed: randomInt(-5, 5) },
+			{ length: rad / 5, speed: randomInt(-5, 5) },
+			{ length: rad / 5, speed: randomInt(-5, 5) },
+		], { centre, radius, paintCol: randomCol(0.5, 0.9), lineCol: '#FFFFFF' });
+	} while (chain.getLimit() <= 0);
+	return chain;
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
