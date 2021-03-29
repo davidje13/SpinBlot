@@ -47,6 +47,44 @@ class SpinBlotCanvas {
 		this.back.restore();
 	}
 
+	fastDraw(chains, steps) {
+		const ctx = this.back;
+		ctx.lineJoin = 'round';
+		ctx.lineCap = 'round';
+
+		const dt = 0.5 / steps;
+		for (let n = 0; n <= steps; ++n) {
+			const t = dt * n;
+			ctx.save();
+			const paths = chains.map((chain) => chain.resolve(t));
+			let minY = Number.POSITIVE_INFINITY;
+			paths.forEach((path) => path.forEach(({ y }) => {
+				if (y < minY) {
+					minY = y;
+				}
+			}));
+			ctx.beginPath();
+			ctx.rect(0, 0, this.width, minY + chains[0].radius);
+			ctx.clip('nonzero');
+			for (let i = 0; i < chains.length; ++ i) {
+				const chain = chains[i];
+				const path = paths[i];
+				ctx.lineWidth = chain.radius * 2;
+				ctx.strokeStyle = chain.paintCol;
+				ctx.beginPath();
+				const mirror = chain.centre.x * 2;
+				for (let j = path.length; (j--) > 0;) {
+					ctx.lineTo(mirror - path[j].x, path[j].y);
+				}
+				for (let j = 1; j < path.length; ++j) {
+					ctx.lineTo(path[j].x, path[j].y);
+				}
+				ctx.stroke();
+			}
+			ctx.restore();
+		}
+	}
+
 	renderVis(chains, t) {
 		this.vis.clearRect(0, 0, this.width, this.height);
 		chains.forEach((chain) => chain.draw(this.vis, t, chain.lineCol));
